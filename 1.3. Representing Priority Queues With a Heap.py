@@ -18,5 +18,5 @@ print(fruits)
 # Second function in building a Priority Queue 
 from heapq import heappop
 
-heappop(fruits)
-fruits
+print(heappop(fruits))
+print(fruits)

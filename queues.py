@@ -3,11 +3,10 @@
 # 1. Implementing Queues in Python
 # November 19, 2022
 
-
-# 1. Building a Queue Data Type
-# Queues: Class
 from collections import deque
 
+# 1. Building a Queue Data Type
+# Class for Queues
 class Queue:
     def __init__(self, *elements):
         self._elements = deque(elements)
@@ -24,3 +23,9 @@ class Queue:
 
     def dequeue(self):
         return self._elements.popleft()
+
+# 2. Building a Stack Data Type
+# Class for Stack
+class Stack(Queue):
+    def dequeue(self):
+        return self._elements.pop()

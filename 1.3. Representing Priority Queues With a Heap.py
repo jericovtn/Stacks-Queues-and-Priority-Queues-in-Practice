@@ -4,6 +4,7 @@
 # November 19, 2022
 
 # 3. Representing Priority Queues With a Heap
+# First function in building a Priority Queue 
 from heapq import heappush
 
 fruits = []
@@ -14,4 +15,8 @@ heappush(fruits, "banana")
 
 print(fruits)
 
+# Second function in building a Priority Queue 
+from heapq import heappop
 
+heappop(fruits)
+fruits

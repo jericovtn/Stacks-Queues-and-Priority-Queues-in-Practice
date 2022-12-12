@@ -1,9 +1,10 @@
 # Name: Jerico James F. Viteño
 # Laboratory Exercise 4: Stacks, Queues, and Priority Queues in Practice
 # 1. Implementing Queues in Python
-# 1. Building a Queue Data Type
 # November 19, 2022
 
+
+# 1. Building a Queue Data Type
 # Queues: Class
 from collections import deque
 
@@ -23,4 +24,5 @@ class Queue:
 
     def dequeue(self):
         return self._elements.popleft()
+
         

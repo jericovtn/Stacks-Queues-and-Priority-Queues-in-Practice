@@ -36,12 +36,23 @@ class Stack(Queue):
 
 # 4. Building a Priority Queue Data Type
 # Class for Priority Queue
+
+# Unfortunately, there are a few problems with this implementation
+# class PriorityQueue:
+#    def __init__(self):
+#        self._elements = []
+#   def enqueue_with_priority(self, priority, value):
+#        heappush(self._elements, (priority, value))
+#    def dequeue(self):
+#        return heappop(self._elements)
+
+# Fixed Code
 class PriorityQueue:
     def __init__(self):
         self._elements = []
 
     def enqueue_with_priority(self, priority, value):
-        heappush(self._elements, (priority, value))
+        heappush(self._elements, (-priority, value))
 
     def dequeue(self):
-        return heappop(self._elements)
+        return heappop(self._elements)[1]

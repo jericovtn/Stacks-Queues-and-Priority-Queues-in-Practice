@@ -56,3 +56,4 @@ class PriorityQueue:
 
     def dequeue(self):
         return heappop(self._elements)[1]
+        

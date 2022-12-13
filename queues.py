@@ -54,6 +54,8 @@ class PriorityQueue:
         heappush(self._elements, element)
 
     def dequeue(self):
-        return heappop(self._elements)[1]
+        # return heappop(self._elements)[1]
+        #Improved Code
+        return heappop(self._elements)[-1]
 
 

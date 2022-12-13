@@ -1,7 +1,7 @@
 # Name: Jerico James F. Viteño
 # Laboratory Exercise 4: Stacks, Queues, and Priority Queues in Practice
 # 1. Implementing Queues in Python
-# November 19, 2022
+# December 17, 2022
 
 from collections import deque
 

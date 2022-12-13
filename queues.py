@@ -66,3 +66,4 @@ class PriorityQueue(IterableMixin): # Added IterableMixin for 6
         # return heappop(self._elements)[1]
         #Improved Code for 5
         return heappop(self._elements)[-1]
+

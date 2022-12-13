@@ -4,7 +4,6 @@
 # November 19, 2022
 
 from collections import deque
-from heapq import heappop, heappush
 
 # 1. Building a Queue Data Type
 # Class for Queues
@@ -35,25 +34,26 @@ class Stack(Queue):
 # Do not have Class
 
 # 4. Building a Priority Queue Data Type
+
+from heapq import heappop, heappush
+
+# 5. Handling Corner Cases in Your Priority Queue=
+from itertools import count
+
 # Class for Priority Queue
-
-# Unfortunately, there are a few problems with this implementation
-# class PriorityQueue:
-#    def __init__(self):
-#        self._elements = []
-#   def enqueue_with_priority(self, priority, value):
-#        heappush(self._elements, (priority, value))
-#    def dequeue(self):
-#        return heappop(self._elements)
-
-# Fixed Code
 class PriorityQueue:
     def __init__(self):
         self._elements = []
+        # Added for 5
+        self._counter = count()
 
     def enqueue_with_priority(self, priority, value):
-        heappush(self._elements, (-priority, value))
+        # heappush(self._elements, (-priority, value))
+        # Improved Code
+        element = (-priority, next(self._counter), value)
+        heappush(self._elements, element)
 
     def dequeue(self):
         return heappop(self._elements)[1]
-        
+
+

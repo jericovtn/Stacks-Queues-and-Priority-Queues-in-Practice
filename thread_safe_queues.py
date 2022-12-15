@@ -185,7 +185,7 @@ def main(args):
     buffer = QUEUE_TYPES[args.queue]()
     # 9: Supply Products to Producer threads
     products = PRIORITIZED_PRODUCTS if args.queue == "heap" else PRODUCTS
-    
+
     # 7: main() function, create the producer and consumer threads
     producers = [
         Producer(args.producer_speed, buffer, products)
@@ -218,4 +218,3 @@ if __name__ == "__main__":
         main(parse_args())
     except KeyboardInterrupt:
         pass
-

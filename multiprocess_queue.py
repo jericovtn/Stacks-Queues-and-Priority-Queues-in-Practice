@@ -14,6 +14,9 @@ from string import ascii_lowercase
 # 4
 import multiprocessing
 
+# 5
+from dataclasses import dataclass
+
 # 3: Encapsulating the formula for the combination in a new class - Combinations
 class Combinations:
     def __init__(self, alphabet, length):
@@ -32,6 +35,20 @@ class Combinations:
             ]
             for i in reversed(range(self.length))
         )
+
+# 5: Added a Job class that Python will serialize and place on the input queue
+@dataclass(frozen=True)
+class Job:
+    combinations: Combinations
+    start_index: int
+    stop_index: int
+
+    def __call__(self, hash_value):
+        for index in range(self.start_index, self.stop_index):
+            text_bytes = self.combinations[index].encode("utf-8")
+            hashed = md5(text_bytes).hexdigest()
+            if hashed == hash_value:
+                return text_bytes.decode("utf-8")
 
 # 4: Communicating in Full-Duplex Mode
 class Worker(multiprocessing.Process):

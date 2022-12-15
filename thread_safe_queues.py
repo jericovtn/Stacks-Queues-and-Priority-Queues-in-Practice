@@ -3,11 +3,28 @@
 # 3. Using Thread-Safe Queues
 # December 17, 2022
 
+# First, install "python -m pip install rich"
+
+# Imports
+
+# 1
 import argparse
 from queue import LifoQueue, PriorityQueue, Queue
+
+# 2
 import threading
+
+# 3
 from random import randint
 from time import sleep
+
+# 4
+from itertools import zip_longest
+from rich.align import Align
+from rich.columns import Columns
+from rich.console import Group
+from rich.live import Live
+from rich.panel import Panel
 
 QUEUE_TYPES = {
     "fifo": Queue,
@@ -15,6 +32,7 @@ QUEUE_TYPES = {
     "heap": PriorityQueue
 }
 
+# Define the Products
 PRODUCTS = (
     ":balloon:",
     ":cookie:",
@@ -33,6 +51,7 @@ PRODUCTS = (
     ":yo-yo:",
 )
 
+# 2: Encapsulate in a common base class
 class Worker(threading.Thread):
     def __init__(self, speed, buffer):
         super().__init__(daemon=True)
@@ -42,6 +61,7 @@ class Worker(threading.Thread):
         self.working = False
         self.progress = 0
     
+    # 3: Check the state of a worker thread, simulate some work or idle time
     @property
     def state(self):
         if self.working:
@@ -62,7 +82,56 @@ class Worker(threading.Thread):
             sleep(delay / 100)
             self.progress += 1
 
+# 4: Defines a view that renders the current state of your producers, consumers, and the queue ten times a second
+class View:
+    def __init__(self, buffer, producers, consumers):
+        self.buffer = buffer
+        self.producers = producers
+        self.consumers = consumers
 
+    def animate(self):
+        with Live(
+            self.render(), screen=True, refresh_per_second=10
+        ) as live:
+            while True:
+                live.update(self.render())
+
+    def render(self):
+
+        match self.buffer:
+            case PriorityQueue():
+                title = "Priority Queue"
+                products = map(str, reversed(list(self.buffer.queue)))
+            case LifoQueue():
+                title = "Stack"
+                products = list(self.buffer.queue)
+            case Queue():
+                title = "Queue"
+                products = reversed(list(self.buffer.queue))
+            case _:
+                title = products = ""
+
+        rows = [
+            Panel(f"[bold]{title}:[/] {', '.join(products)}", width=82)
+        ]
+        pairs = zip_longest(self.producers, self.consumers)
+        for i, (producer, consumer) in enumerate(pairs, 1):
+            left_panel = self.panel(producer, f"Producer {i}")
+            right_panel = self.panel(consumer, f"Consumer {i}")
+            rows.append(Columns([left_panel, right_panel], width=40))
+        return Group(*rows)
+
+    def panel(self, worker, title):
+        if worker is None:
+            return ""
+        padding = " " * int(29 / 100 * worker.progress)
+        align = Align(
+            padding + worker.state, align="left", vertical="middle"
+        )
+        return Panel(align, height=5, title=title)
+
+
+# 1: Define the entry point, which will parse arguments with the argparse module
 def main(args):
     buffer = QUEUE_TYPES[args.queue]()
 

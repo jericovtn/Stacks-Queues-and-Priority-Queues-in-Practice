@@ -77,16 +77,6 @@ class Worker(multiprocessing.Process):
                 self.queue_out.put(plaintext)
                 break
 
-# 1: Reversing an MD5 Hash on a Single Thread - Updated
-def reverse_md5(hash_value, alphabet=ascii_lowercase, max_length=6):
-    for length in range(1, max_length + 1):
-        for combination in Combinations(alphabet, length):
-            text_bytes = "".join(combination).encode("utf-8")
-            hashed = md5(text_bytes).hexdigest()
-            if hashed == hash_value:
-                return text_bytes.decode("utf-8")
-
-
 # 6: Create both queues and populate the input queue with jobs before starting the worker processes
 # def main() was improved
 def main(args):
@@ -137,11 +127,6 @@ def parse_args():
     )
     return parser.parse_args()
 
-# ...
-
-if __name__ == "__main__":
-    main(parse_args())
-
 # 2: Distributing Workload Evenly in Chunks, Helper Function
 def chunk_indices(length, num_chunks):
     start = 0
@@ -153,4 +138,4 @@ def chunk_indices(length, num_chunks):
         num_chunks -= 1
 
 if __name__ == "__main__":
-    main()  
+    main(parse_args())

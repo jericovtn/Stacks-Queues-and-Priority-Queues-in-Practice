@@ -11,6 +11,9 @@ from hashlib import md5
 from itertools import product
 from string import ascii_lowercase
 
+# 4
+import multiprocessing
+
 # 3: Encapsulating the formula for the combination in a new class - Combinations
 class Combinations:
     def __init__(self, alphabet, length):
@@ -29,6 +32,21 @@ class Combinations:
             ]
             for i in reversed(range(self.length))
         )
+
+# 4: Communicating in Full-Duplex Mode
+class Worker(multiprocessing.Process):
+    def __init__(self, queue_in, queue_out, hash_value):
+        super().__init__(daemon=True)
+        self.queue_in = queue_in
+        self.queue_out = queue_out
+        self.hash_value = hash_value
+
+    def run(self):
+        while True:
+            job = self.queue_in.get()
+            if plaintext := job(self.hash_value):
+                self.queue_out.put(plaintext)
+                break
 
 # 1: Reversing an MD5 Hash on a Single Thread - Updated
 def reverse_md5(hash_value, alphabet=ascii_lowercase, max_length=6):

@@ -11,6 +11,25 @@ from hashlib import md5
 from itertools import product
 from string import ascii_lowercase
 
+# 3: Encapsulating the formula for the combination in a new class - Combinations
+class Combinations:
+    def __init__(self, alphabet, length):
+        self.alphabet = alphabet
+        self.length = length
+
+    def __len__(self):
+        return len(self.alphabet) ** self.length
+
+    def __getitem__(self, index):
+        if index >= len(self):
+            raise IndexError
+        return "".join(
+            self.alphabet[
+                (index // len(self.alphabet) ** i) % len(self.alphabet)
+            ]
+            for i in reversed(range(self.length))
+        )
+
 # 1: Reversing an MD5 Hash on a Single Thread
 def reverse_md5(hash_value, alphabet=ascii_lowercase, max_length=6):
     for length in range(1, max_length + 1):

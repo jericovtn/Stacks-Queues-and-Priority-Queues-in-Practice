@@ -22,6 +22,9 @@ import time
 from hashlib import md5
 from string import ascii_lowercase
 
+# 8: Predefined value as None
+POISON_PILL = None
+
 # 3: Encapsulating the formula for the combination in a new class - Combinations
 class Combinations:
     def __init__(self, alphabet, length):

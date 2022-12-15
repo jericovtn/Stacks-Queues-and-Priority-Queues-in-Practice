@@ -20,6 +20,7 @@ from time import sleep
 
 # 4
 from itertools import zip_longest
+
 from rich.align import Align
 from rich.columns import Columns
 from rich.console import Group
@@ -29,6 +30,9 @@ from rich.panel import Panel
 # 5
 from random import choice, randint
 
+# 7
+from dataclasses import dataclass, field
+from enum import IntEnum
 
 QUEUE_TYPES = {
     "fifo": Queue,
@@ -53,6 +57,26 @@ PRODUCTS = (
     ":teddy_bear:",
     ":thread:",
     ":yo-yo:",
+)
+
+# 7: Defined two new data types
+@dataclass(order=True)
+class Product:
+    priority: int
+    label: str = field(compare=False)
+
+    def __str__(self):
+        return self.label
+
+class Priority(IntEnum):
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+
+PRIORITIZED_PRODUCTS = (
+    Product(Priority.HIGH, ":1st_place_medal:"),
+    Product(Priority.MEDIUM, ":2nd_place_medal:"),
+    Product(Priority.LOW, ":3rd_place_medal:"),
 )
 
 # 2: Encapsulate in a common base class

@@ -26,6 +26,10 @@ class Job(NamedTuple):
     url: str
     depth: int = 1
 
+    def __lt__(self, other):
+        if isinstance(other, Job):
+            return len(self.url) < len(other.url)
+
 # 1: Building Blocks
 async def main(args):
     session = aiohttp.ClientSession()
@@ -33,6 +37,8 @@ async def main(args):
         # update main() coroutine by creating the queue and the asynchronous tasks that run the workers
         links = Counter()
         queue = asyncio.Queue()
+        # queue = asyncio.LifoQueue()
+        # queue = asyncio.PriorityQueue()
         tasks = [
             asyncio.create_task(
                 worker(
@@ -74,14 +80,7 @@ async def worker(worker_id, session, queue, links, max_depth):
             print(f"[{worker_id} failed at {url=}]", file=sys.stderr)
         finally:
             queue.task_done()
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("url")
-    parser.add_argument("-d", "--max-depth", type=int, default=2)
-    parser.add_argument("-w", "--num-workers", type=int, default=3)
-    return parser.parse_args()
-
+            
 async def fetch_html(session, url):
     async with session.get(url) as response:
         if response.ok and response.content_type == "text/html":
@@ -94,6 +93,13 @@ def parse_links(url, html):
         href = anchor.get("href").lower()
         if not href.startswith("javascript:"):
             yield urljoin(url, href)
+            
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("url")
+    parser.add_argument("-d", "--max-depth", type=int, default=2)
+    parser.add_argument("-w", "--num-workers", type=int, default=3)
+    return parser.parse_args()
 
 def display(links):
     for url, count in links.most_common():

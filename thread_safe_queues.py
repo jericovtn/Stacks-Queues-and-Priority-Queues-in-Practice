@@ -26,6 +26,10 @@ from rich.console import Group
 from rich.live import Live
 from rich.panel import Panel
 
+# 5
+from random import choice, randint
+
+
 QUEUE_TYPES = {
     "fifo": Queue,
     "lifo": LifoQueue,
@@ -81,6 +85,28 @@ class Worker(threading.Thread):
         for _ in range(100):
             sleep(delay / 100)
             self.progress += 1
+
+# 5: The producer thread
+class Producer(Worker):
+    def __init__(self, speed, buffer, products):
+        super().__init__(speed, buffer)
+        self.products = products
+
+    def run(self):
+        while True:
+            self.product = choice(self.products)
+            self.simulate_work()
+            self.buffer.put(self.product)
+            self.simulate_idle()
+
+# 6: The consumer thread
+class Consumer(Worker):
+    def run(self):
+        while True:
+            self.product = self.buffer.get()
+            self.simulate_work()
+            self.buffer.task_done()
+            self.simulate_idle()
 
 # 4: Defines a view that renders the current state of your producers, consumers, and the queue ten times a second
 class View:

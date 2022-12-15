@@ -160,6 +160,23 @@ class View:
 # 1: Define the entry point, which will parse arguments with the argparse module
 def main(args):
     buffer = QUEUE_TYPES[args.queue]()
+    # 7: main() function, create the producer and consumer threads
+    producers = [
+        Producer(args.producer_speed, buffer, PRODUCTS)
+        for _ in range(args.producers)
+    ]
+    consumers = [
+        Consumer(args.consumer_speed, buffer) for _ in range(args.consumers)
+    ]
+
+    for producer in producers:
+        producer.start()
+
+    for consumer in consumers:
+        consumer.start()
+
+    view = View(buffer, producers, consumers)
+    view.animate()
 
 def parse_args():
     parser = argparse.ArgumentParser()

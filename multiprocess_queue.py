@@ -8,19 +8,19 @@
 # 6
 import argparse
 
-# 1
-import time
-from hashlib import md5
-from itertools import product
-from string import ascii_lowercase
-
 # 4
 import multiprocessing
 
 # 5
 from dataclasses import dataclass
 
+# 7
+import queue
 
+# 1
+import time
+from hashlib import md5
+from string import ascii_lowercase
 
 # 3: Encapsulating the formula for the combination in a new class - Combinations
 class Combinations:
@@ -83,6 +83,9 @@ def reverse_md5(hash_value, alphabet=ascii_lowercase, max_length=6):
 # 6: Create both queues and populate the input queue with jobs before starting the worker processes
 # def main() was improved
 def main(args):
+    # Added: Periodically poll the output queue for a potential solution and break out of the loop 
+    t1 = time.perf_counter()
+
     queue_in = multiprocessing.Queue()
     queue_out = multiprocessing.Queue()
 
@@ -98,6 +101,19 @@ def main(args):
         combinations = Combinations(ascii_lowercase, text_length)
         for indices in chunk_indices(len(combinations), len(workers)):
             queue_in.put(Job(combinations, *indices))
+
+    # Added
+    while any(worker.is_alive() for worker in workers):
+        try:
+            solution = queue_out.get(timeout=0.1)
+            if solution:
+                t2 = time.perf_counter()
+                print(f"{solution} (found in {t2 - t1:.1f}s)")
+                break
+        except queue.Empty:
+            pass
+    else:
+        print("Unable to find a solution")
 
 def parse_args():
     parser = argparse.ArgumentParser()

@@ -30,7 +30,7 @@ from rich.panel import Panel
 # 5
 from random import choice, randint
 
-# 7
+# 8
 from dataclasses import dataclass, field
 from enum import IntEnum
 
@@ -59,7 +59,7 @@ PRODUCTS = (
     ":yo-yo:",
 )
 
-# 7: Defined two new data types
+# 8: Defined two new data types
 @dataclass(order=True)
 class Product:
     priority: int
@@ -180,13 +180,15 @@ class View:
         )
         return Panel(align, height=5, title=title)
 
-
 # 1: Define the entry point, which will parse arguments with the argparse module
 def main(args):
     buffer = QUEUE_TYPES[args.queue]()
+    # 9: Supply Products to Producer threads
+    products = PRIORITIZED_PRODUCTS if args.queue == "heap" else PRODUCTS
+    
     # 7: main() function, create the producer and consumer threads
     producers = [
-        Producer(args.producer_speed, buffer, PRODUCTS)
+        Producer(args.producer_speed, buffer, products)
         for _ in range(args.producers)
     ]
     consumers = [

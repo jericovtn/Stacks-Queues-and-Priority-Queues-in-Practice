@@ -5,6 +5,9 @@
 
 # Imports
 
+# 6
+import argparse
+
 # 1
 import time
 from hashlib import md5
@@ -16,6 +19,8 @@ import multiprocessing
 
 # 5
 from dataclasses import dataclass
+
+
 
 # 3: Encapsulating the formula for the combination in a new class - Combinations
 class Combinations:
@@ -74,10 +79,42 @@ def reverse_md5(hash_value, alphabet=ascii_lowercase, max_length=6):
             if hashed == hash_value:
                 return text_bytes.decode("utf-8")
 
-def main():
-    t1 = time.perf_counter()
-    text = reverse_md5("a9d1cbf71942327e98b40cf5ef38a960")
-    print(f"{text} (found in {time.perf_counter() - t1:.1f}s)")
+
+# 6: Create both queues and populate the input queue with jobs before starting the worker processes
+# def main() was improved
+def main(args):
+    queue_in = multiprocessing.Queue()
+    queue_out = multiprocessing.Queue()
+
+    workers = [
+        Worker(queue_in, queue_out, args.hash_value)
+        for _ in range(args.num_workers)
+    ]
+
+    for worker in workers:
+        worker.start()
+
+    for text_length in range(1, args.max_length + 1):
+        combinations = Combinations(ascii_lowercase, text_length)
+        for indices in chunk_indices(len(combinations), len(workers)):
+            queue_in.put(Job(combinations, *indices))
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("hash_value")
+    parser.add_argument("-m", "--max-length", type=int, default=6)
+    parser.add_argument(
+        "-w",
+        "--num-workers",
+        type=int,
+        default=multiprocessing.cpu_count(),
+    )
+    return parser.parse_args()
+
+# ...
+
+if __name__ == "__main__":
+    main(parse_args())
 
 # 2: Distributing Workload Evenly in Chunks, Helper Function
 def chunk_indices(length, num_chunks):

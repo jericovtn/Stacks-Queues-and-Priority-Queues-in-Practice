@@ -17,7 +17,6 @@ import networkx as nx
 # 2
 from queues import MutableMinHeap, Queue, Stack
 
-
 # 1: Object Representation of the Cities and Roads
 # Implemented Class City
 class City(NamedTuple):

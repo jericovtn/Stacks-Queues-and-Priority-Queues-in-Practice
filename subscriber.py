@@ -14,3 +14,4 @@ with redis.Redis() as client:
         if message["type"] == "message":
             body = message["data"].decode("utf-8")
             print(f"Got message: {body}")
+        

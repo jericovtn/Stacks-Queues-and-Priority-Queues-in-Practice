@@ -12,6 +12,7 @@ import networkx as nx
 
 # 2
 from queues import Queue
+from queues import Stack
 
 
 
@@ -104,3 +105,4 @@ def retrace(previous, source, destination):
 
 def connected(graph, source, destination):
     return shortest_path(graph, source, destination) is not None
+

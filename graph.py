@@ -62,11 +62,9 @@ def breadth_first_traverse(graph, source, order_by=None):
                 visited.add(neighbor)
                 queue.enqueue(neighbor)
 
-# Modified
+# Modified twice
 def breadth_first_search(graph, source, predicate, order_by=None):
-    for node in breadth_first_traverse(graph, source, order_by):
-        if predicate(node):
-            return node
+    return search(breadth_first_traverse, graph, source, predicate, order_by)
 
 # 3: Shortest Path Using Breadth-First Traversal
 # Copying and adapting the code from your earlier breadth_first_traverse() function
@@ -132,3 +130,13 @@ def recursive_depth_first_traverse(graph, source, order_by=None):
                 yield from visit(neighbor)
 
     return visit(source)
+
+# Implemented the depth-first search
+def depth_first_search(graph, source, predicate, order_by=None):
+    return search(depth_first_traverse, graph, source, predicate, order_by)
+
+def search(traverse, graph, source, predicate, order_by=None):
+    for node in traverse(graph, source, order_by):
+        if predicate(node):
+            return node
+

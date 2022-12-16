@@ -5,6 +5,17 @@
 
 from collections import deque
 
+# 6
+from dataclasses import dataclass
+
+# 4. Building a Priority Queue Data Type
+from heapq import heapify, heappop, heappush
+
+# 5. Handling Corner Cases in Your Priority Queue
+from itertools import count
+
+from typing import Any
+
 # Inserted
 # 6. Refactoring the Code Using a Mixin Class
 class IterableMixin:
@@ -43,12 +54,6 @@ class Stack(Queue):
 # 3. Representing Priority Queues With a Heap
 # Does not have Class
 
-# 4. Building a Priority Queue Data Type
-from heapq import heappop, heappush
-
-# 5. Handling Corner Cases in Your Priority Queue
-from itertools import count
-
 # Class for Priority Queue
 class PriorityQueue(IterableMixin): # Added IterableMixin for 6
     def __init__(self):
@@ -67,3 +72,32 @@ class PriorityQueue(IterableMixin): # Added IterableMixin for 6
         #Improved Code for 5
         return heappop(self._elements)[-1]
 
+# Data Class
+@dataclass(order=True)
+class Element:
+    priority: float
+    count: int
+    value: Any
+
+# Class for MutableMinHeap
+class MutableMinHeap(IterableMixin):
+    def __init__(self):
+        super().__init__()
+        self._elements_by_value = {}
+        self._elements = []
+        self._counter = count()
+
+    def __setitem__(self, unique_value, priority):
+        if unique_value in self._elements_by_value:
+            self._elements_by_value[unique_value].priority = priority
+            heapify(self._elements)
+        else:
+            element = Element(priority, next(self._counter), unique_value)
+            self._elements_by_value[unique_value] = element
+            heappush(self._elements, element)
+
+    def __getitem__(self, unique_value):
+        return self._elements_by_value[unique_value].priority
+
+    def dequeue(self):
+        return heappop(self._elements).value

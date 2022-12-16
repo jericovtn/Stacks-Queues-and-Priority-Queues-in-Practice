@@ -1,7 +1,7 @@
 # Name: Jerico James F. Viteño
 # Laboratory Exercise 4: Stacks, Queues, and Priority Queues in Practice
 # 6. Integrating Python With Distributed Message Queues
-# 3. Redis: Apache Kafka: kafka-python3
+# 3. Apache Kafka: kafka-python3
 # December 17, 2022
 
 # Set up a distributed cluster

@@ -1,3 +1,8 @@
+# Name: Jerico James F. Viteño
+# Laboratory Exercise 4: Stacks, Queues, and Priority Queues in Practice
+# 6. Integrating Python With Distributed Message Queues
+# December 17, 2022
+
 import pika
 
 QUEUE_NAME = "mailbox"

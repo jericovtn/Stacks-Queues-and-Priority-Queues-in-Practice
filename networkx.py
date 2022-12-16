@@ -1,5 +1,5 @@
 import networkx as nx
-from graph import City, load_graph
+from graph import City, load_graph, dijkstra_shortest_path
 from graph import (
     City,
     load_graph,
@@ -15,8 +15,8 @@ graph.nodes["london"]
 nodes, graph = load_graph("roadmap.dot", City.from_dict)
 nodes["london"]
 
-city1 = nodes["aberdeen"]
-city2 = nodes["perth"]
+city1 = nodes["london"]
+city2 = nodes["edinburgh"]
 
 
 # Def
@@ -37,6 +37,12 @@ def order(neighbors):
         return city.latitude
     return iter(sorted(neighbors, key=by_latitude, reverse=True))
 
+def distance(weights):
+    return float(weights["distance"])
+
+def weight(node1, node2, weights):
+    return distance(weights)
+
 city = bfs(graph, nodes["edinburgh"], is_twentieth_century)
 city.name
 
@@ -52,6 +58,8 @@ def by_latitude(city):
 )
 
 # For
+
+
 for i, path in enumerate(nx.all_shortest_paths(graph, city1, city2), 1):
     print(f"{i}.", " → ".join(city.name for city in path))
 
@@ -82,7 +90,9 @@ for node in nx.bfs_tree(graph, nodes["edinburgh"], sort_neighbors=order):
         break
 else:
     print("Not found")
-
+    
+for city in dijkstra_shortest_path(graph, city1, city2, distance):
+    print(city.name)
 print(nx.nx_agraph.read_dot("roadmap.dot"))
 print(graph)
 

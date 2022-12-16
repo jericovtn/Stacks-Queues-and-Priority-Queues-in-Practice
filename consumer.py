@@ -8,15 +8,17 @@ import pika
 
 QUEUE_NAME = "mailbox"
 
-# Rudimentary producer
+# Rudimentary producer with callback function
+def callback(channel, method, properties, body):
+    message = body.decode("utf-8")
+    print(f"Got message: {message}")
+
 with pika.BlockingConnection() as connection:
     channel = connection.channel()
     channel.queue_declare(queue=QUEUE_NAME)
-    while True:
-        message = input("Message: ")
-        channel.basic_publish(
-            exchange="",
-            routing_key=QUEUE_NAME,
-            body=message.encode("utf-8")
-        )
-
+    channel.basic_consume(
+        queue=QUEUE_NAME,
+        auto_ack=True,
+        on_message_callback=callback
+    )
+    channel.start_consuming()

@@ -3,12 +3,17 @@
 # 2. Using Queues in Practice
 # December 17, 2022
 
+# 3
+from collections import deque
+
 # 1
 from typing import NamedTuple
 import networkx as nx
 
 # 2
 from queues import Queue
+
+
 
 # 1: Object Representation of the Cities and Roads
 # Implemented Class City
@@ -83,3 +88,19 @@ def shortest_path(graph, source, destination, order_by=None):
                 previous[neighbor] = node
                 if neighbor == destination:
                     return retrace(previous, source, destination)
+
+def retrace(previous, source, destination):
+    path = deque()
+
+    current = destination
+    while current != source:
+        path.appendleft(current)
+        current = previous.get(current)
+        if current is None:
+            return None
+
+    path.appendleft(source)
+    return list(path)
+
+def connected(graph, source, destination):
+    return shortest_path(graph, source, destination) is not None

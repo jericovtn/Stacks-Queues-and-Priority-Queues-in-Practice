@@ -1,0 +1,29 @@
+# Name: Jerico James F. Viteño
+# Laboratory Exercise 4: Stacks, Queues, and Priority Queues in Practice
+# 6. Integrating Python With Distributed Message Queues
+# 3. Redis: Apache Kafka: kafka-python3
+# December 17, 2022
+
+# Set up a distributed cluster
+# Use Docker Compose to start a multi-container Docker application
+
+version: "3"
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
